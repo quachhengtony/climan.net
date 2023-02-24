@@ -199,12 +199,10 @@ internal class Program
         {
             try
             {
-                // Read from climan.json file if it exists, if not, create a new climan.json file, then create repositoryList from the file
-                FileHelper.CreateFileIfNotExist();
+                // Read from climan.json file if it exists, if not, print guidance message
                 repositoryList = FileHelper.ReadRepositoryFileToList();
-                if (repositoryList == null) return;
 
-                if (repositoryList.Count <= 0)
+                if (repositoryList == null || repositoryList.Count <= 0)
                 {
                     Console.BackgroundColor = ConsoleColor.Blue;
                     Console.Write("INF");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -32,25 +33,36 @@ internal static class FileHelper
 
     public static List<Repository>? ReadRepositoryFileToList()
     {
-        List<Repository>? repositoryList;
-        string? repositoryString = File.ReadAllText(DefaultRepositoryFile);
+        try
+        {
+            List<Repository>? repositoryList;
+            string? repositoryString = File.ReadAllText(DefaultRepositoryFile);
 
-        if (repositoryString == null)
+            //if (repositoryString == null)
+            //{
+            //    return default;
+            //}
+
+            repositoryList = JsonSerializer.Deserialize<List<Repository>>(repositoryString, new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            if (repositoryList == null)
+            {
+                return default;
+            }
+
+            return repositoryList;
+        } 
+        catch (FileNotFoundException ex)
         {
             return default;
         }
-
-        repositoryList = JsonSerializer.Deserialize<List<Repository>>(repositoryString, new JsonSerializerOptions()
+        catch (Exception ex)
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
-
-        if (repositoryList == null)
-        {
-            return default;
+            throw;
         }
-
-        return repositoryList;
     }
 }
 
